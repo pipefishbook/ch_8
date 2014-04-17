@@ -2,7 +2,7 @@ var restify = require('restify');
 var _ = require('underscore');
 
 
-var DB = require('./mockDB');
+var DS = require('./DS');
 
 var server = restify.createServer({ name: 'api' })
 
@@ -13,13 +13,13 @@ server
 
 // The main API route for movies
 server.get('/api/movies', function (req, res, next) {
-  return DB.allMovies()
+  return DS.allMovies()
     .then(function(m) { res.send(m); })
     .catch(function(err) { res.send(500, err) });
 });
 
 server.get("/api/movies/:key", function(req, res, next) {
-    return DB.showMovie(req.params.key)
+    return DS.showMovie(req.params.key)
              .then(function(m) { res.send(m); })
              .error(function (e) {
                res.send(400, e.message);
@@ -28,7 +28,7 @@ server.get("/api/movies/:key", function(req, res, next) {
 });
 
 server.put("/api/movies/:key", function(req, res, next) {
-    return DB.voteMovie(req.params.key, req.body.vote)
+    return DS.voteMovie(req.params.key, req.body.vote)
              .then(function(m) { res.send(m); })
              .error(function (e) {
                res.send(400, e.message);

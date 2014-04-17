@@ -10,4 +10,8 @@ app.use('/api', proxy(url.parse('http://0.0.0.0:5001/api/')));
 
 app.use(express.static(__dirname + '/static'));
 
-http.createServer(app).listen(5000)
+
+var port = 5000;
+http.createServer(app).listen(port, function() {
+  console.log('Frontend listening at %s', port);
+});

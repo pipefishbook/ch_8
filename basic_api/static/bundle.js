@@ -73,6 +73,8 @@ var Movie = Backbone.Model.extend({
 
   idAttribute: '_key',
 
+  urlRoot: '/api/movies',
+
   voteMovie: function(stars) {
     var that = this;
     this.save({ type: "PUT", 
@@ -126,9 +128,10 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 // data
+var Movie = require('models/movie');
 var Movies = require('collections/movies');
 var movies = new Movies();
-var deferred = movies.fetch();
+var deferred = 1; // movies.fetch();
 
 // views
 var Layout = require('views/layout');
@@ -137,7 +140,14 @@ var MoviesRouter = Backbone.Router.extend({
 
   routes: {
     'movies/:id': 'selectMovie',
+    'details/:id': 'showDetails',
     '':           'showMain'
+  },
+
+  showDetails: function(key) {
+    var movie = new Movie({_key: key})
+    this.listenTo(movie, 'all', function(ev) { console.log(ev) });
+    movie.fetch();
   },
 
   selectMovie: function(id) {
@@ -156,19 +166,20 @@ var MoviesRouter = Backbone.Router.extend({
 
   initialize: function(options) {
     this.movies = movies;
+    this.listenTo(this.movies, 'all', function(ev) { console.log(ev) });
     this.layout = Layout.getInstance({
       el: '#movies', router: this
     });
     var that = this;
-    deferred.done(function(results) {
-      that.movies.reset(results);
-      that.layout.render();
-    });
+    // deferred.done(function(results) {
+    //   that.movies.reset(results);
+    //   that.layout.render();
+    // });
   }
 });
 module.exports = MoviesRouter;
 
-},{"backbone":36,"collections/movies":6,"underscore":40,"views/layout":15}],10:[function(require,module,exports){
+},{"backbone":36,"collections/movies":6,"models/movie":7,"underscore":40,"views/layout":15}],10:[function(require,module,exports){
 var Backbone = require('backbone');
 
 var ChoseView = Backbone.View.extend({
@@ -451,7 +462,7 @@ module.exports = MoviesList;
 
 },{"backbone":36,"underscore":40,"views/movie":16}],18:[function(require,module,exports){
 module.exports=require(9)
-},{"backbone":36,"collections/movies":6,"underscore":40,"views/layout":15}],19:[function(require,module,exports){
+},{"backbone":36,"collections/movies":6,"models/movie":7,"underscore":40,"views/layout":15}],19:[function(require,module,exports){
 module.exports=require(10)
 },{"backbone":36}],20:[function(require,module,exports){
 module.exports=require(11)

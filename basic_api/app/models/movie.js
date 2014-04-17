@@ -10,6 +10,8 @@ var Movie = Backbone.Model.extend({
 
   idAttribute: '_key',
 
+  urlRoot: '/api/movies',
+
   voteMovie: function(stars) {
     var that = this;
     this.save({ type: "PUT", 

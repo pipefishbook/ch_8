@@ -22,18 +22,22 @@ var Movies = fs.readFileAsync(fileName, "utf8")
     return Promise.resolve(movies);
   });
 
+
+function _mapAttributes(movie) {
+  return {
+    id: movie.id,
+    title: movie.title,
+    _key: sha1(movie.title),
+  };
+};
+
+
 // We will later export this to a module
 var MoviesReader = {
 
   allMovies: function() {
-   return Movies 
-     .map(function(movie) {
-       return {
-         id: movie.id,
-         title: movie.title,
-         _key: sha1(movie.title),
-       };
-     })
+    return Movies
+     .map(_mapAttributes)
      .catch(function(err) {
        console.log(err);
      });
