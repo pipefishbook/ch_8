@@ -3,8 +3,8 @@ var _ = require('underscore');
 
 // data
 var Movies = require('collections/movies');
-var data = require('../../../movies.json');
-var movies = new Movies(data);
+var movies = new Movies();
+var deferred = movies.fetch();
 
 // views
 var Layout = require('views/layout');
@@ -17,9 +17,12 @@ var MoviesRouter = Backbone.Router.extend({
   },
 
   selectMovie: function(id) {
-    this.movies.resetSelected();
-    this.movies.selectByID(id);
-    this.layout.setDetails(this.movies.get(id));
+    var that = this;
+    deferred.done(function() {
+      movies.resetSelected();
+      movies.selectByID(id);
+      that.layout.setDetails(that.movies.get(id));
+    });
   },
 
   showMain: function() {
@@ -32,7 +35,11 @@ var MoviesRouter = Backbone.Router.extend({
     this.layout = Layout.getInstance({
       el: '#movies', router: this
     });
-    this.layout.render();
+    var that = this;
+    deferred.done(function(results) {
+      that.movies.reset(results);
+      that.layout.render();
+    });
   }
 });
 module.exports = MoviesRouter;

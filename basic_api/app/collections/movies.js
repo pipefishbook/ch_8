@@ -5,6 +5,8 @@ var _ = require('underscore');
 var Movies = Backbone.Collection.extend({
   model: Movie,
 
+  url: '/api/movies',
+
   getSelected: function() {
     return this.pluck('selected').indexOf(true);
   },

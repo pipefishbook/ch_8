@@ -14,6 +14,7 @@ var MovieView = Backbone.View.extend({
   selectMovie: function(ev) {
     console.log('event on ' + this.model.id);
     if (!this.model.get('selected')) {
+      this.model.voteMovie(1);
       this.router.navigate("/movies/" + this.model.id, {trigger: true});
     }
   },

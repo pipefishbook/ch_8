@@ -1,35 +1,13 @@
-var restify = require('restify');
-var _ = require('underscore');
+var http = require('http');
+var express = require('express');
+var app = express();
+var url = require('url');
+var proxy = require('proxy-middleware');
+var logger = require('morgan');
 
+app.use(logger({ immediate: true, format: 'dev' }));
+app.use('/api', proxy(url.parse('http://0.0.0.0:5001/api/')));
 
-var DB = require('./mockDB');
+app.use(express.static(__dirname + '/static'));
 
-var server = restify.createServer({ name: 'movies' })
-
-server
-  .use(restify.fullResponse())
-  .use(restify.bodyParser())
-
-
-// The main API route for movies
-server.get('/api/movies', function (req, res, next) {
-  return DB.allMovies()
-    .then(function(m) { res.send(m); })
-    .catch(function(err) { res.send(500, err) });
-})
-
-// The API route to extract a genres of movies
-server.get('/api/genres', function (req, res, next) {
-  var genres = _.chain(movies)
-                .map(function(movie) { 
-                   return movie.genres 
-                 })
-                 .flatten()
-                 .uniq().value();
-    res.send(genres);
-})
-
-var port = process.env.PORT || 5000;
-server.listen(port, function () {
-  console.log('%s listening at %s', server.name, server.url)
-})
+http.createServer(app).listen(5000)
