@@ -4,6 +4,7 @@ var Movie = Backbone.Model.extend({
   defaults: {
     title: "default",
     year: 0,
+    rating: 0,
     description: "empty",
     selected: false
   },

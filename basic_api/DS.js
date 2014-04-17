@@ -31,6 +31,18 @@ function _mapAttributes(movie) {
   };
 };
 
+function _mapAllAttributes(movie) {
+  return {
+    title: movie.title,
+    description: movie.description,
+    showtime: movie.showtime,
+    rating: movie.rating,
+    genres: movie.genres,
+    _key: sha1(movie.title),
+  };
+};
+
+
 
 // We will later export this to a module
 var MoviesReader = {
@@ -51,7 +63,8 @@ var MoviesReader = {
      } else {
        return match;
      }
-   });
+   }) 
+   .then(_mapAllAttributes);
  },
 
 

@@ -1,7 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$;
-Backbone.XView = require('backbone.xview');
 
 var ControlsView = Backbone.View.extend({
 

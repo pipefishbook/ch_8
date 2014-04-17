@@ -5,7 +5,9 @@ var _ = require('underscore');
 var MovieView = Backbone.View.extend({
   tagName: 'article',
   className: 'movie',
-  template: '<h1><a href="/movies/<%= id %>"><%= title %></a><hr></h1>',
+  template: '<h1><a href="/movies/<%= id %>">\
+                 <%= title %></a></h1>\
+                 <hr>',
 
   events: {
     'click': 'selectMovie'

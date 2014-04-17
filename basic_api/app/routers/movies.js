@@ -2,10 +2,9 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 
 // data
-var Movie = require('models/movie');
 var Movies = require('collections/movies');
 var movies = new Movies();
-var deferred = 1; // movies.fetch();
+var deferred = movies.fetch();
 
 // views
 var Layout = require('views/layout');
@@ -45,10 +44,10 @@ var MoviesRouter = Backbone.Router.extend({
       el: '#movies', router: this
     });
     var that = this;
-    // deferred.done(function(results) {
-    //   that.movies.reset(results);
-    //   that.layout.render();
-    // });
+    deferred.done(function(results) {
+      that.movies.reset(results);
+      that.layout.render();
+    });
   }
 });
 module.exports = MoviesRouter;
