@@ -1,7 +1,8 @@
 var restify = require('restify');
 var _ = require('underscore');
 
-var movies = require('./movies.json');
+
+var DB = require('./mockDB');
 
 var server = restify.createServer({ name: 'movies' })
 
@@ -12,7 +13,9 @@ server
 
 // The main API route for movies
 server.get('/api/movies', function (req, res, next) {
-  res.send(movies);
+  return DB.allMovies()
+    .then(function(m) { res.send(m); })
+    .catch(function(err) { res.send(500, err) });
 })
 
 // The API route to extract a genres of movies

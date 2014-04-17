@@ -16,6 +16,8 @@
     "moment": "~2.5.1",
     "backbone.obscura": "~0.1.7",
     "restify": "~2.7.0",
-    "bluebird": "~1.2.2"
+    "bluebird": "~1.2.2",
+    "sha1": "~1.1.0",
+    "proxy-middleware": "~0.5.0"
   }
 }
