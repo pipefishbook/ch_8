@@ -37,13 +37,22 @@ function _mapAllAttributes(movie) {
 }
 
 function _find(movies, key) {
-  console.log(key);
   var match = _.find(movies, function(movie) { return movie.id === parseInt(key) });
   if (!match) {
     throw new Promise.RejectionError("ID not found");
   } else {
     return match;
   }
+}
+
+function _mapGenres(movies) {
+  return _.chain(movies)
+  .map(function(movie) { 
+    return movie.genres 
+  })
+  .flatten()
+  .uniq()
+  .value();
 }
 
 function _findBySha(movies, key) {
@@ -60,11 +69,12 @@ var DS = function() {};
 
 DS.prototype.allMovies = function() {
     return Movies
-     .map(_mapAttributes)
-     .catch(function(err) {
-       console.log(err);
-     });
- }
+     .map(_mapAttributes);
+}
+
+DS.prototype.allGenres = function() {
+  return Movies.then(_mapGenres);
+}
 
 DS.prototype.voteMovie = function(id, vote, voter) {
    var that = this;
@@ -82,7 +92,7 @@ DS.prototype.voteMovie = function(id, vote, voter) {
         that.updateScore(id, score);
      })
      .then(function() {
-       return that.showMovie(id);
+       return that.findBySha(id);
      });
   } 
 
@@ -115,6 +125,13 @@ DS.prototype.updateScore = function(key, score) {
 DS.prototype.find = function(key) {
    return Movies.then(function(movies) {
      return _find(movies, key);
+   }) 
+   .then(_mapAllAttributes);
+}
+
+DS.prototype.findBySha = function(key) {
+   return Movies.then(function(movies) {
+     return _findBySha(movies, key);
    }) 
    .then(_mapAllAttributes);
 }
