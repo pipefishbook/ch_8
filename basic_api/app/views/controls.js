@@ -2,6 +2,8 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = Backbone.$;
 
+var GenresView = require('views/genresFilter');
+
 var ControlsView = Backbone.View.extend({
 
   events: {
@@ -9,8 +11,12 @@ var ControlsView = Backbone.View.extend({
      'click #by_rating': 'sortByRating',
      'click #by_showtime': 'sortByShowtime',
      'click #next': 'paginateNext',
-     'click #prev': 'paginatePrev',
-     'change input[name="genres"]': 'selectGenres'
+     'click #prev': 'paginatePrev'
+  },
+
+  render: function() {
+    this.$el.html("testetstst");
+    return this;
   },
 
 
@@ -21,10 +27,6 @@ var ControlsView = Backbone.View.extend({
       that.proxy.filterBy(genre.value, function(m) {
         return (_.findWhere(m.get('genres'), genre.value))
       })
-      // that.proxy.filterBy(genre, function(movie) { 
-      //   var genreFound = _.indexOf(movie.get('genres'), genre.value);
-      //   return (genreFound !== -1);
-      // });
     });
   },
 
@@ -33,7 +35,6 @@ var ControlsView = Backbone.View.extend({
   },
 
   paginatePrev: function() {
-    console.log("**");
     this.proxy.prevPage();
   },
 

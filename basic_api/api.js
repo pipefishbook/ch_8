@@ -10,6 +10,7 @@ server
   .use(restify.fullResponse())
   .use(restify.bodyParser())
 
+var ds = new DS();
 
 // The main API route for movies
 server.get('/api/movies', function (req, res, next) {
@@ -19,16 +20,16 @@ server.get('/api/movies', function (req, res, next) {
 });
 
 server.get("/api/movies/:key", function(req, res, next) {
-    return DS.showMovie(req.params.key)
+    return ds.find(req.params.key)
              .then(function(m) { res.send(m); })
              .error(function (e) {
-               res.send(400, e.message);
+               res.send(400, {err: e.message});
              })
             .catch(function(err) { res.send(500, err) });
 });
 
 server.put("/api/movies/:key", function(req, res, next) {
-    return DS.voteMovie(req.params.key, req.body.vote)
+    return ds.voteMovie(req.params.key, req.body.vote)
              .then(function(m) { res.send(m); })
              .error(function (e) {
                res.send(400, e.message);
