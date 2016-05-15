@@ -1,16 +1,18 @@
 var restify = require('restify');
 var _ = require('underscore');
 
-
+// access to the data store
 var DS = require('./DS');
+var ds = new DS();
 
+// create server object
 var server = restify.createServer({ name: 'api' })
 
+// add middleware
 server
   .use(restify.fullResponse())
   .use(restify.bodyParser())
 
-var ds = new DS();
 
 // The main API route for movies
 server.get('/api/movies', function (req, res, next) {
@@ -45,7 +47,7 @@ server.get('/api/genres', function (req, res, next) {
     .catch(function(err) { res.send(500, err) });
 });
 
-var port = process.env.PORT || 5001;
-server.listen(port, function () {
-  console.log('%s listening at %s', server.name, server.url)
+server.port = process.env.PORT || 5001;
+server.listen(server.port, function () {
+  console.log('%s listening at %s', server.name, server.port)
 })

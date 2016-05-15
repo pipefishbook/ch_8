@@ -568,6 +568,11 @@ var paginatedEvents = [
   'paginated:change:perPage', 'paginated:change:page', 'paginated:change:numPages'
 ];
 
+var unsupportedMethods = [
+  'add', 'create', 'remove', 'set', 'reset', 'sort', 'parse',
+  'sync', 'fetch', 'push', 'pop', 'shift', 'unshift'
+];
+
 // Extend obscura with each of the above methods, passing the call to the underlying
 // collection.
 //
@@ -597,7 +602,17 @@ _.each(sortedMethods, function(method) {
   };
 });
 
+_.each(unsupportedMethods, function(method) {
+  methods[method] = function() {
+    throw new Error("Backbone.Obscura: Unsupported method: " + method + 'called on read-only proxy');
+  };
+});
+
 _.extend(Obscura.prototype, methods, Backbone.Events);
+
+// Now that we've over-written all of the backbone collection methods, we can safely
+// inherit from backbone's Collection
+Obscura = Backbone.Collection.extend(Obscura.prototype);
 
 // Expose the other proxy types so that the user can use them on their own if they want
 Obscura.FilteredCollection = FilteredCollection;
@@ -621,7 +636,7 @@ var blacklistedMethods = [
 ];
 
 var eventWhiteList = [
-  'add', 'remove', 'reset', 'sort', 'destroy'
+  'add', 'remove', 'reset', 'sort', 'destroy', 'sync', 'request', 'error'
 ];
 
 function proxyCollection(from, target) {
@@ -2979,7 +2994,7 @@ module.exports = proxyEvents;
 
 },{"underscore":39}],36:[function(require,module,exports){
 /*!
-* Backbone.CollectionView, v0.9.1
+* Backbone.CollectionView, v0.9.3
 * Copyright (c)2013 Rotunda Software, LLC.
 * Distributed under MIT license
 * http://github.com/rotundasoftware/backbone-collection-view
@@ -2997,7 +3012,6 @@ module.exports = proxyEvents;
 		// Browser globals
 		factory( root._, root.Backbone, ( root.jQuery || root.Zepto || root.$ ) );
 	}
-
 }( this, function( _, Backbone, $ ) {
 	var mDefaultModelViewConstructor = Backbone.View;
 
@@ -4219,6 +4233,8 @@ module.exports = proxyEvents;
 		// return the public API
 		return Container;
 	})(Backbone, _);
+
+	return Backbone.CollectionView;
 } ) );
 },{"backbone":35,"underscore":39}],37:[function(require,module,exports){
 /*!
@@ -17758,4 +17774,4 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
   }
 }).call(this);
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26])
